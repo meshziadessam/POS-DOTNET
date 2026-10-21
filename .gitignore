@@ -1,0 +1,43 @@
+# Generated build and editor files
+**/bin/
+**/obj/
+.vs/
+.vscode/
+*.user
+*.suo
+__pycache__/
+# Local dependencies, installers and release archives
+.tools/
+artifacts/
+*.exe
+*.dll
+*.pdb
+*.zip
+# Runtime/customer data and test output
+/data/
+/settings/
+/backups/
+/logs/
+qa-output/
+performance-output*/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.prn
+*.log
+# Local credentials and signing material
+.env
+.env.*
+*.pfx
+*.p12
+*.key
+manager_password.json
+settings.json
+
+# Never publish seller secrets or customer activation files
+issuer-private.xml
+*-private.xml
+seller-private/
+activation/
+*.lic

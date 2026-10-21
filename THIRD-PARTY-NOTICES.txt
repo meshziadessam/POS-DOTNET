@@ -1,0 +1,8 @@
+Push 1.2.1 — third-party notices
+Microsoft .NET Framework 4.8: full Setup embeds Microsoft's unmodified, digitally signed offline redistributable, installed under its own Microsoft license. https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48
+System.Data.SQLite.Core 1.0.119 / SQLite: core source dedicated to the public domain. Includes System.Data.SQLite.dll and x86/x64 SQLite.Interop.dll. https://system.data.sqlite.org/ and https://www.sqlite.org/copyright.html
+Inno Setup 6.4.3 installer engine: copyright Jordan Russell and Martijn Laan. https://jrsoftware.org/files/is/license.txt
+Customer-supplied restaurant logos are configured after installation. No previous customer's logo is embedded in this commercial MVP.
+
+
+
