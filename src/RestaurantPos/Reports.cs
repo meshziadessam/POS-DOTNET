@@ -23,6 +23,7 @@ namespace RestaurantPos
     {
         private readonly Store store;
         public ReportService(Store store){this.store=store;}
+        public DataTable ShiftMetadata(long shift){return store.Query("SELECT start_at,end_at FROM shifts WHERE shift_id=@p0",shift);}
         private static decimal Money(DataRow row,string column){return row[column]==DBNull.Value||Convert.ToString(row[column])==""?0:Convert.ToDecimal(row[column],CultureInfo.InvariantCulture);}
         public DataTable Orders(long? shift=null,string from=null,string to=null)
         {return store.Query("SELECT * FROM orders WHERE (@p0 IS NULL OR shift_id=@p0) AND (@p1 IS NULL OR date>=@p1) AND (@p2 IS NULL OR date<=@p2) ORDER BY CAST(order_id AS INTEGER) DESC",shift,from,to);}

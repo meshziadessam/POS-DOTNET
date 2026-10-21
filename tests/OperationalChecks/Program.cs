@@ -43,6 +43,13 @@ internal static class OperationalChecks
             var reloaded=new PosSettings(root);Check(reloaded.VerifyManager("secret123")&&!reloaded.VerifyManager("bad"),"Manager password fails");Check(reloaded.PrinterName==settings.PrinterName&&reloaded.Theme=="light"&&reloaded.PrintMode=="customer","Settings not persisted");
             Check(LocalData.Initialize(root)==database&&new Store(database).RecentOrders().Rows.Count==2,"Initialization overwrote existing database");
             var printer=new ReceiptPrinter(reloaded,root);string output=args.Length>0?Path.GetFullPath(args[0]):root;Directory.CreateDirectory(output);
+            var shiftReports=new ReportService(store);int detailedHeight;
+            using(var bitmap=printer.RenderShift(shiftReports,1,true)){Check(bitmap.Width==576&&bitmap.Height>500,"80mm shift report table rendering failed");detailedHeight=bitmap.Height;bitmap.Save(Path.Combine(output,"shift-report-80mm.png"));}
+            using(var bitmap=printer.RenderShift(shiftReports,1,false)){Check(bitmap.Height<detailedHeight,"Shift report did not omit optional order table");}
+            var narrowShiftSettings=new PosSettings(root){PaperWidth=58,PrinterTransport="escpos"};
+            using(var bitmap=new ReceiptPrinter(narrowShiftSettings,root).RenderShift(shiftReports,1,true)){Check(bitmap.Width==384&&bitmap.Height>500,"58mm shift report rendering failed");bitmap.Save(Path.Combine(output,"shift-report-58mm.png"));}
+            using(var bitmap=printer.RenderShift(shiftReports,999999,true)){Check(bitmap.Height>0,"Empty shift report rendering failed");}
+            string shiftSpool=Path.Combine(output,"shift-report.prn");new ReceiptPrinter(narrowShiftSettings,root).PrintShift(shiftReports,1,true,shiftSpool);Check(new FileInfo(shiftSpool).Length>100,"Shift report ESC/POS output missing");
             using(var bitmap=printer.Render(first,false)){Check(bitmap.Width==576&&bitmap.Height>200,"80mm receipt rendering failed");bitmap.Save(Path.Combine(output,"receipt-customer-80mm.png"));}
             settings.PaperWidth=58;using(var bitmap=new ReceiptPrinter(settings,root).Render(first,true)){Check(bitmap.Width==384&&bitmap.Height>200,"58mm kitchen rendering failed");bitmap.Save(Path.Combine(output,"receipt-kitchen-58mm.png"));}
             var badSettings=new PosSettings(root){PrinterName="NONEXISTENT-PRINTER-TEST"};rejected=false;try{new ReceiptPrinter(badSettings,root).Print(first);}catch(InvalidOperationException){rejected=true;}Check(rejected&&store.RecentOrders().Rows.Count==2,"Print failure changed committed sales");

@@ -13,6 +13,8 @@ namespace RestaurantPos
         private readonly PosSettings settings;
         private readonly string root;
         public ReceiptPrinter(PosSettings settings,string root) { this.settings=settings;this.root=root; }
+        public Bitmap RenderShift(ReportService reports,long shift,bool includeOrders){return ShiftReceiptLayout.Render(reports,shift,includeOrders,settings,root);}
+        public void PrintShift(ReportService reports,long shift,bool includeOrders,string outputFile=null){using(var bitmap=RenderShift(reports,shift,includeOrders))PrintBitmap(bitmap,"تقرير وردية "+shift,outputFile);}
         public Bitmap RenderText(IEnumerable<string> text)
         {
             int width=settings.PaperWidth==58?384:576;var lines=new List<string>(text);
